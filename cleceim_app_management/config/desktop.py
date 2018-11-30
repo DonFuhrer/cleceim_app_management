@@ -44,5 +44,36 @@ def get_data():
 			"link": "List/Textil",
 			"doctype": "Textil",
 			"label": "Textil"
+		},
+
+		# module icon 'Facturacion'
+		{
+			"module_name": "Facturacion",
+			"color": "green",
+			"icon": "octicon octicon-repo",
+			"type": "module",
+			"label": _("Facturaci\xf3n")
+		},
+
+		# doctype icon 'Factura'
+		{
+			"module_name": "Factura",
+			"color": "green",
+			"icon": "octicon octicon-file-text",
+			"type": "list",
+			"link": "List/Factura",
+			"doctype": "Factura",
+			"label": "Factura"
+		},
+
+		# doctype icon 'Albaran'
+		{
+			"module_name": "Albaran",
+			"color": "green",
+			"icon": "octicon octicon-clippy",
+			"type": "list",
+			"link": "List/Albaran",
+			"doctype": "Albaran",
+			"label": "Albaran"
 		}
 	]
