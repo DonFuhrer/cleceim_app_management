@@ -1096,6 +1096,7 @@ apps/erpnext/erpnext/setup/doctype/email_digest/templates/default.html +130,Open
 DocType: Notification Control,Delivery Note Message,Mensaje en albaránn
 DocType: Lab Test Template,Result Format,Formato del Resultado
 DocType: Expense Claim,Expenses,Gastos
+Doctype: Albaran,Albarán
 DocType: Delivery Stop,Delivery Notes,Albaranes
 DocType: Item Variant Attribute,Item Variant Attribute,Atributo de Variante de Producto
 ,Purchase Receipt Trends,Tendencias de recibos de compra
