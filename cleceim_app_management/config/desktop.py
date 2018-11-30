@@ -5,10 +5,10 @@ from frappe import _
 def get_data():
 	return [
 		{
-			"module_name": "CLECEIM App Management",
+			"module_name": "Ordenes de trabajo",
 			"color": "green",
-			"icon": "octicon octicon-tools",
+			"icon": "octicon octicon-versions",
 			"type": "module",
-			"label": _("CLECEIM App Management")
+			"label": _("\xd3rdenes de trabajo")
 		}
 	]
