@@ -37,7 +37,7 @@ def get_data():
 
 		# doctype icon 'Textil'
 		{
-			"module_nam": "Textil",
+			"module_name": "Textil",
 			"color": "green",
 			"icon": "octicon octicon-jersey",
 			"type": "list",
