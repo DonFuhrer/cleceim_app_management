@@ -1828,7 +1828,7 @@
  "issingle": 0, 
  "istable": 0, 
  "max_attachments": 0, 
- "modified": "2018-11-28 13:14:34.134641", 
+ "modified": "2018-12-03 12:00:45.106563", 
  "modified_by": "Administrator", 
  "module": "Ordenes de trabajo", 
  "name": "Gran Formato", 
@@ -1852,7 +1852,7 @@
    "role": "System Manager", 
    "set_user_permissions": 0, 
    "share": 1, 
-   "submit": 0, 
+   "submit": 1, 
    "write": 1
   }, 
   {
@@ -1872,7 +1872,7 @@
    "role": "Technician", 
    "set_user_permissions": 0, 
    "share": 1, 
-   "submit": 0, 
+   "submit": 1, 
    "write": 1
   }
  ], 
