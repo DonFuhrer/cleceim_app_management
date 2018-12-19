@@ -74,6 +74,6 @@ def get_data():
 			"type": "list",
 			"link": "List/Albaran",
 			"doctype": "Albaran",
-			"label": "Albaran"
+			"label": _("Albar\xE1n")
 		}
 	]
