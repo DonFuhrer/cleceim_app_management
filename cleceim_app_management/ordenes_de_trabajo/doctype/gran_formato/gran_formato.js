@@ -5,10 +5,6 @@ frappe.ui.form.on('Gran Formato',
 {
 	setup: function (frm)
 	{
-		/*frm.custom_make_buttons = {
-			'Factura': 'Crear factura'
-		};*/
-
 		frm.set_query("bom_no", function() {
 			if (frm.doc.production_item && frm.doc.item_type=="Compuesto") {
 				return {
@@ -27,9 +23,6 @@ frappe.ui.form.on('Gran Formato',
 			frm.set_intro("Valida la \xF3rden de trabajo para procesarla.");
 
 		if (frm.doc.docstatus === 1) {
-			/*frm.add_custom_button("Crear factura", function() {
-				frappe.msgprint("Mensaje", "T\xEDtulo del mensaje");
-			});*/
 			cleceim_app_management.set_custom_buttons(frm, frm.doc.status);
 
 			frm.trigger('show_progress');
@@ -158,145 +151,6 @@ frappe.ui.form.on('Gran Formato',
 	}
 });
 
-/*var stop_work_order = function (frm, status) {
-	frappe.call({
-		method: "cleceim_app_management.cleceim_app_management.doctype.ordenes_de_trabajo.ordenes_de_trabajo.stop_unstop",
-		args: {
-			work_order: frm.doc.name,
-			status: status
-		},
-		callback: function (r) {
-			if (r.message) {
-				frm.set_value("status", r.message);
-				frm.reload_doc();
-			}
-		}
-	});
-}*/
-
-/*cleceim_app_management = {
-
-	set_custom_buttons: function (frm)
-	{
-		if (frm.doc.docstatus === 1) {
-			if (frm.doc.status != 'Stopped' && frm.doc.status != 'Completed')
-				frm.add_custom_button(__('Stop'), function() {
-					//cleceim_app_management.stop_work_order(cur_frm, "Stopped");
-					frappe.msgprint('Funci\xF3n no disponible', 'Llamada a funci\xF3n STOP_WORK_ORDER');
-				}, __('Status'));
-			else
-			if (frm.doc.status == 'Stopped')
-				frm.add_custom_button(__('Re-open'), function() {
-					//cleceim_app_management.stop_work_order(cur_frm, "Resumed");
-					frappe.msgprint('Funci\xF3n no disponible', 'Llamada a funci\xF3n STOP_WORK_ORDER');
-				}, __('Status'));
-
-			if ((flt(frm.doc.materials_transferred_for_manufacturing) < flt(frm.doc.qty)) && frm.doc.status != 'Stopped') {
-				frm.has_start_btn = true;
-				var start_btn = frm.add_custom_button(__('Start'), function() {
-					cleceim_app_management.make_se(frm, "Material Transfer for Manufacture");
-					//frappe.msgprint("Funci\xF3n no disponible", "Llamada a la funci\xF3n MAKE_SE");
-				});
-				start_btn.addClass('btn-primary');
-			}
-
-			if ((flt(frm.doc.produced_qty) < flt(frm.doc.material_transferred_for_manufacturing)) && frm.doc.status != 'Stopped') {
-				frm.has_finish_btn = true;
-				var finish_btn = frm.add_custom_button(__('Finish'), function() {
-					cleceim_app_management.make_se(frm, "Manufacture");
-					//frappe.msgprint("Funci\xF3n no disponible", "Llamada a la funci\xF3n MAKE_SE");
-				});
-				if (frm.doc.material_transferred_for_manufacturing == frm.doc.qty)
-					finish_btn.addClass('btn-primary');
-			}
-
-			if (frm.doc.workflow_state == 'Completado') {
-				frm.has_custom_btn = true;
-				var inv_btn = frm.add_custom_button('Crear factura', function() {
-					frappe.msgprint('Funci\xF3n no disponible', 'Llamada a la funci\xF3n CREAT_FILE_DESCRIPTOR');
-				});
-				inv_btn.addClass('btn-primary');
-			}
-		}
-	},
-
-	make_se: function (frm, purpose)
-	{
-		var max = (purpose === "Manufacture") ?
-			flt(frm.doc.material_transferred_for_manufacturing) - flt(frm.doc.produced_qty) : flt(frm.doc.qty) - flt(frm.doc.material_transferred_for_manufacturing);
-
-		max = flt(max, precision("qty"));
-		frappe.prompt({fieldtype: "Float", label: __("Qty for {0}", [purpose]), fieldname: "qty", description: __("Max: {0}", [max]), 'default': max},
-		function (data) {
-			if (data.qty > max) {
-				frappe.msgprint(__("Quantity must not be more than {0}", [max]));
-				return;
-			}
-			frappe.call({
-				method: "cleceim_app_management.cleceim_app_management.doctype.ordenes_de_trabajo.ordenes_de_trabajo.make_stock_entry",
-				args: {
-					"production_order_id": frm.doc.name,
-					"purpose": purpose,
-					"qty": data.qty
-				},
-				callback: function (r) {
-					var doclist = frappe.model.sync(r.message);
-					frappe.set_route("Form", doclist[0].doctype, doclist[0].name);
-				}
-			});
-		}, __("Select Quantity"), __("Make"));
-	},*/
-
-	/*stop_work_order: function (frm, status)
-	{
-		frappe.call({
-			method: "cleceim_app_management.ordenes_de_trabajo.doctype.gran_formato.gran_formato.stop_unstop",
-			args: {
-				work_order: frm.doc.name,
-				status: status
-			},
-			callback: function (r) {
-				if (r.message) {
-					frm.set_value("status", r.message);
-					frm.reload_doc();
-				}
-			}
-		});
-	}*/
-	/*stop_work_order: function (frm, status)
-	{
-		frappe.call({
-			method: "cleceim_app_management.cleceim_app_management.doctype.gran_formato.stop_unstop",
-			args: {
-				work_order: frm.docname,
-				status: status
-			},
-			callback: function (r) {
-				if (r.message) {
-					frm.set_value("status", r.message);
-					frm.reload_doc();
-				}
-			}
-		});
-	}*/
-	/*stop_work_order: function (frm, status)
-	{
-		frappe.call({
-			type: "POST",
-			args: {
-				work_order: frm.doc.name,
-				status: status
-			},
-			method: "cleceim_app_management.cleceim_app_management.doctype.ordenes_de_trabajo.ordenes_de_trabajo.stop_unstop",
-			callback: function (r) {
-				if (r.message) {
-					frm.set_value("status", r.message);
-					frm.reload_doc();
-				}
-			}
-		});
-	}
-};*/
 
 cleceim_app_management = {
 	
