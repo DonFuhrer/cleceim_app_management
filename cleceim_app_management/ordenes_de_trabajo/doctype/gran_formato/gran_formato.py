@@ -30,7 +30,7 @@ class GranFormato(Document):
 		return status
 
 	def get_status(self, status=None):
-		'''Return the status based on stock entries against this production order'''
+		'''Return the status based on stock entries against this production_order'''
 		if not status:
 			status = self.status
 
@@ -38,22 +38,22 @@ class GranFormato(Document):
 			status = 'Draft'
 		elif self.docstatus==1:
 			if status != 'Stopped':
-				stock_entries = frappe._dict(frappe.db.sql(
-					"""
+				stock_entries = frappe._dict("""
 					select purpose, sum(fg_completed_qty) from `tabStock Entry`
 					where production_order=%s and docstatus=1
-					group by purpose""", self.name))
+					group by purpose
+				""", self.name)
 
 				status = "Not started"
 				if stock_entries:
 					status = "In Process"
 					produced_qty = stock_entries.get("Manufacture")
-					if flt(produced_qty) == flt(self.qty):
+					if flt(produced_qty)==flt(self.qty):
 						status = "Completed"
 		else:
 			status = 'Cancelled'
 
-		return status
+			return status
 
 	def update_required_items(self):
 		'''
@@ -63,7 +63,7 @@ class GranFormato(Document):
 
 		if self.docstatus==1:
 			# calculate transferred qty based on submitted stock entries
-			self.update_transaferred_qty_for_required_items()
+			self.update_transferred_qty_for_required_items()
 
 			# update in bin
 			self.update_reserved_qty_for_production()
@@ -75,12 +75,12 @@ class GranFormato(Document):
 				stock_bin = get_bin(d.item_code, d.source_warehouse)
 				stock_bin.update_reserved_qty_for_production()
 
-	def update_transaferred_qty_for_required_items(self):
+	def update_transferred_qty_for_required_items(self):
 		'''update transferred qty from submitted stock entries for that item against
-			the production order'''
+				the production order'''
 
 		for d in self.required_items:
-			transferred_qty = frappe.db.sql('''
+			transferred_qty = frappe.db.sql("""
 				select sum(qty)
 				from `tabStock Entry` entry, `tabStock Entry Detail` detail
 				where
@@ -88,18 +88,19 @@ class GranFormato(Document):
 					and entry.purpose="Material Transfer for Manufacture"
 					and entry.docstatus=1
 					and detail.parent=entry.name
-					and detail.item_code=%s''', (self.name, d.item_code))[0][0]
+					and detail.item_code=%s
+			""", (self.name, d.item_code))[0][0]
 
 			d.db_set('transferred_qty', flt(transferred_qty), update_modified=False)
 
 @frappe.whitelist()
-def stop_unstop(work_order, status):
-	""" Called from client side on Stop/Unstop event """
+def stop_unstop(production_order, status):
+	"""Called from client side on Stop/Unstop event"""
 
 	if not frappe.has_permission("Gran Formato", "write"):
 		frappe.throw(_("Not permitted"), frappe.PermissionError)
 
-	w_order = frappe.get_doc("Gran Formato", work_order)
+	w_order = frappe.get_doc("Gran Formato", production_order)
 	w_order.update_status(status)
 	w_order.update_planned_qty()
 
@@ -137,14 +138,14 @@ def get_item_details(item, project=None):
 		variant_of = frappe.db.get_value("Item", item, "variant_of")
 
 		if variant_of:
-			res["bom_no"] = frapp.db.get_value("BOM", filters={"item": variant_of, "is_default": 1})
+			res["bom_no"] = frappe.db.get_value("BOM", filters={"item": variant_of, "is_default": 1})
 
 	if not res["bom_no"]:
 		if project:
 			res = get_item_details(item)
 			frappe.msgprint(_("Default BOM not found for Item {0} and Project {1}").format(item, project))
 		else:
-			frapp.throw(_("Default BOM for {0} not found").format(item))
+			frappe.throw(_("Default BOM for {0} not found").format(item))
 
 	res['project'] = project or frappe.db.get_value('BOM', res['bom_no'], 'project')
 	res.update(check_if_scrap_warehouse_mandatory(res["bom_no"]))
@@ -184,7 +185,7 @@ def make_stock_entry(production_order_id, purpose, qty=None):
 		stock_entry.to_warehouse = wip_warehouse
 	else:
 		stock_entry.from_warehouse = production_order.wip_warehouse
-		stock_entry.to_warehouse = production_order.fg_warehouse
+		stock_entry.to_warehouse   = production_order.fg_warehouse
 		#additional_costs = get_additional_costs(production_order, fg_qty=stock_entry.fg_completed_qty)
 		#stock_entry.set("additional_costs", additional_costs)
 
@@ -194,5 +195,5 @@ def make_stock_entry(production_order_id, purpose, qty=None):
 @frappe.whitelist()
 def get_default_warehouse():
 	wip_warehouse = frappe.db.get_single_value("Manufacturing Settings", "default_wip_warehouse")
-	fg_warehouse = frappe.db.get_single_value("Manufacturing Settings", "default_fg_warehouse")
-	return {"wip_warehouse": wip_warehouse, "fg_warehouse": fg_warehouse}
+	fg_warehouse  = frappe.db.get_single_value("Manufacturing Settings", "default_fg_warehouse")
+	return {"wip_warehouse": wip_warehouse, "fg_warehouse": fg_warehouse} 
