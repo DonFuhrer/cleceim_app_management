@@ -28,7 +28,7 @@ frappe.ui.form.on('Digital',
 				frappe.model.set_value(
 					frm.doctype, frm.docname,
 					'cus_paper_print_size',
-					data.cus_width + "x" + data.cus_height,
+					data.cus_width + " x " + data.cus_height,
 					'Data'
 				);
 			}, 'Establecer dimensiones personalizadas', 'Aceptar');
