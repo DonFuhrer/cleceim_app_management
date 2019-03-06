@@ -6,22 +6,22 @@ frappe.ui.form.on('Gran Formato',
 	setup: function (frm)
 	{
 		frm.set_query("bom_no", function() {
-			if (frm.doc.production_item && frm.doc.item_type == "Compuesto")`{
+			if (frm.doc.production_item && frm.doc.item_type=="Compuesto") {
 				return {
 					query: "erpnext.controllers.queries.bom",
 					filters: {item: cstr(frm.doc.production_item)}
 				};
-			} else msgprint("Primero debes introducir el art\xEDculo a manufacturar");
+			} else msgprint("Primero debes introducir el art\xEDculo a manufacturar.");
 		});
 	},
 
 	refresh: function (frm)
 	{
 		frm.set_intro("");
-		if (frm.doc.docstatus === 0 && !frm.doc.__islocal)
+		if (frm.doc.docstatus===0 && !frm.doc.__islocal)
 			frm.set_intro("Valida la \xF3rden de trabajo para procesarla.");
 
-		if (frm.doc.docstatus === 1) {
+		if (frm.doc.docstatus===1) {
 			cleceim_app_management.set_custom_buttons(frm, frm.doc.status);
 			frm.trigger('show_progress');
 		}
@@ -52,7 +52,7 @@ frappe.ui.form.on('Gran Formato',
 			'progress_class': 'progress-bar-success'
 		});
 
-		if (bars[0].width == '0%') {
+		if (bars[0].width=='0%') {
 			bars[0].width = '0.5%';
 			added_min = 0.5;
 		} message = title;
@@ -97,24 +97,25 @@ frappe.ui.form.on('Gran Formato',
 	{
 		if (frm.doc.item_type) {
 			frm.set_value("wip_warehouse", "Trabajo en proceso");
-			(frm.doc.item_type == "Compuesto") ?
+			(frm.doc.item_type=="Compuesto") ?
 				(frm.set_value("fg_warehouse", "Compuestos")) : (frm.set_value("fg_warehouse", "Materia prima"));
 
-			frm.set_query("production_item", function() {
-				return {
-					query: "erpnext.controllers.queries.item_query",
-					filters: {
-						'is_stock_item': 1,
-						'item_group': frm.doc.fg_warehouse
+			frm.set_query("production_item", function()
+				{
+					return {
+						query: "erpnext.controllers.queries.item_query",
+						filters: {
+							'is_stock_item': 1,
+							'item_group': frm.doc.fg_warehouse
+						}
 					}
-				};
-			});
+				});
 		}
 	},
 
 	bom_no: function (frm)
 	{
-		if (frm.doc.item_type == "Compuesto") {
+		if (frm.doc.item_type=="Compuesto") {
 			frappe.model.with_doc("BOM", frm.doc.bom_no, function()
 				{
 					var tabletransfer = frappe.model.get_doc("BOM", frm.doc.bom_no);
@@ -144,8 +145,7 @@ frappe.ui.form.on('Gran Formato',
 
 	qty: function (frm)
 	{
-		if (frm.doc.item_type == "Compuesto")
-			frm.trigger('bom_no');
+		if (frm.doc.item_type=="Compuesto") frm.trigger('bom_no');
 	}
 });
 
@@ -154,18 +154,18 @@ cleceim_app_management = {
 
 	set_custom_buttons: function (frm)
 	{
-		if (frm.doc.docstatus === 1) {
-			if (frm.doc.status != 'Stopped' && frm.doc.status != 'Completed')
+		if (frm.doc.docstatus===1) {
+			if (frm.doc.status!='Stopped' && frm.doc.status!='Completed')
 				frm.add_custom_button(__('Stop'), function() {
 					cleceim_app_management.stop_production_order(frm, "Stopped");
 				}, __('Status'));
 			else
-			if (frm.doc.status == 'Stopped')
+			if (frm.doc.status=='Stopped')
 				frm.add_custom_button(__('Re-open'), function() {
 					cleceim_app_management.stop_production_order(frm, "Resumed");
 				}, __('Status'));
 
-			if ((flt(frm.doc.material_transferred_for_manufacturing) < flt(frm.doc.qty)) && frm.doc.status != 'Stopped') {
+			if ((flt(frm.doc.material_transferred_for_manufacturing) < flt(frm.doc.qty)) && frm.doc.status!='Stopped') {
 				frm.has_start_btn = true;
 				var start_btn = frm.add_custom_button(__('Start'), function() {
 					cleceim_app_management.make_se(frm, "Material Transfer for Manufacture");
@@ -173,7 +173,7 @@ cleceim_app_management = {
 				start_btn.addClass('btn-primary');
 			}
 
-			if ((flt(frm.doc.produced_qty) < flt(frm.doc.material_transferred_for_manufacturing)) & frm.doc.status != 'Stopped') {
+			if ((flt(frm.doc.produced_qty) < flt(frm.doc.material_transferred_for_manufacturing)) & frm.doc.status!='Stopped') {
 				frm.has_finish_btn = true;
 				var finish_btn = frm.add_custom_button(__('Finish'), function() {
 					cleceim_app_management.make_se(frm, "Manufacture");
@@ -182,7 +182,7 @@ cleceim_app_management = {
 					finish_btn.addClass('btn-primary');
 			}
 
-			if (frm.doc.status == 'Completed') {
+			if (frm.doc.status=='Completed') {
 				frm.has_custom_btn = true;
 				var inv_btn = frm.add_custom_button('Crear factura', function() {
 					frappe.msgprint("Funci\xF3n no disponible", "Llamada a la funci\xF3n CREAT_FILE_DESCRIPTOR");
@@ -194,7 +194,7 @@ cleceim_app_management = {
 
 	make_se: function (frm, purpose)
 	{
-		var max = (purpose === "Manufacture") ?
+		var max = (purpose==="Manufacture") ?
 		flt(frm.doc.material_transferred_for_manufacturing) - flt(frm.doc.produced_qty) :
 		flt(frm.doc.produced_qty) - flt(frm.doc.material_transferred_for_manufacturing);
 
@@ -202,23 +202,25 @@ cleceim_app_management = {
 		frappe.prompt(
 			{
 				fieldtype: "Float",
-				label: __("Qty for {0}", [purpose]),
+				label: ("Cantidad para {0}", [purpose]),
 				fieldname: "qty",
-				description: __("Max: {0}", [max]),
+				description: ("M\xE1x: {0}", [max]),
 				'default': max
 			},
-			function (data) {
+			function (data)
+			{
 				if (data.qty > max) {
-					frappe.msgprint(__("Quantity must not be more than {0}", [max]));
+					frappe.msgprint("La cantidad no debe ser superior a {0}.", [max]);
 					return 0;
 				}
+
 				frappe.call({
 					type: "POST",
 					method: "cleceim_app_management.ordenes_de_trabajo.doctype.gran_formato.gran_formato.make_stock_entry",
 					args: {
-						"production_order_id": frm.doc.docname,
-						"purpose": purpose,
-						"qty": data.qty
+						production_order_id: frm.doc.name,
+						purpose: purpose,
+						qty: (data.qty ? data.qty : 0)
 					},
 					callback: function (r) {
 						var doclist = frappe.model.sync(r.message);
@@ -226,7 +228,7 @@ cleceim_app_management = {
 							doclist[0].doctype, doclist[0].name);
 					}
 				});
-			}, __("Select Quantity"), __("Make"));
+			}, 'Selecciona la cantidad', 'Crear');
 	},
 
 	stop_production_order: function (frm, status)
