@@ -165,8 +165,8 @@ def check_if_scrap_warehouse_mandatory(bom_no):
 	return res
 
 @frappe.whitelist()
-def make_stock_entry(production_order_id, purpose, qty=None):
-	production_order = frappe.get_doc("Gran Formato", production_order_id)
+def make_stock_entry(production_order_id, purpose, qty=0):
+	production_order = frappe.get_doc("Gran Formato", production_order_id);
 
 	if not frappe.db.get_value("Warehouse", production_order.wip_warehouse, "is_group"):
 		wip_warehouse = production_order.wip_warehouse
@@ -185,7 +185,7 @@ def make_stock_entry(production_order_id, purpose, qty=None):
 		stock_entry.to_warehouse = wip_warehouse
 	else:
 		stock_entry.from_warehouse = production_order.wip_warehouse
-		stock_entry.to_warehouse   = production_order.fg_warehouse
+		stock_entry.to_warehouse = production_order.fg_warehouse
 		#additional_costs = get_additional_costs(production_order, fg_qty=stock_entry.fg_completed_qty)
 		#stock_entry.set("additional_costs", additional_costs)
 
