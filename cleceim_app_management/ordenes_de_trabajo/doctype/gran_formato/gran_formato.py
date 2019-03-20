@@ -12,6 +12,15 @@ from erpnext.stock.stock_balance import get_planned_qty, update_bin_qty
 from erpnext.stock.utils import get_bin, validate_warehouse_company, get_latest_stock_qty
 
 class GranFormato(Document):
+	def validate(self):
+		self.set_default_warehouse()
+
+	def set_default_warehouse(self):
+		if not self.wip_warehouse:
+			self.wip_warehouse = frappe.db.get_single_value("Ajustes", "default_wip_warehouse")
+		if not self.fg_warehouse:
+			self.fg_warehouse = frappe.db.get_single_value("Ajustes", "default_fg_warehouse")
+
 	def update_planned_qty(self):
 		update_bin_qty(self.production_item, self.fg_warehouse, {
 			"planned_qty": get_planned_qty(self.production_item, self.fg_warehouse)
@@ -92,6 +101,12 @@ class GranFormato(Document):
 			""", (self.name, d.item_code))[0][0]
 
 			d.db_set('transferred_qty', flt(transferred_qty), update_modified=False)
+
+	def on_submit(self):
+		if not self.wip_warehouse:
+			frappe.throw("Debes especificar un almac\xE9n de trabajos en proceso antes de validar la \xF3rden de trabajo")
+		if not self.fg_warehouse:
+			frappe.throw("Debes especificar un almac\xE9n de destino antes de validar la \xF3rden de trabajo")
 
 @frappe.whitelist()
 def stop_unstop(production_order, status):
