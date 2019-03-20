@@ -27,6 +27,11 @@ frappe.ui.form.on('Gran Formato',
 		}
 	},
 
+	onload: function (frm)
+	{
+		cleceim_app_management.set_default_warehosue(frm);
+	},
+
 	show_progress: function (frm)
 	{
 		var bars = [];
@@ -96,7 +101,6 @@ frappe.ui.form.on('Gran Formato',
 	item_type: function (frm)
 	{
 		if (frm.doc.item_type) {
-			frm.set_value("wip_warehouse", "Trabajo en proceso");
 			(frm.doc.item_type=="Compuesto") ?
 				(frm.set_value("fg_warehouse", "Compuestos")) : (frm.set_value("fg_warehouse", "Materia prima"));
 
@@ -151,6 +155,23 @@ frappe.ui.form.on('Gran Formato',
 
 
 cleceim_app_management = {
+
+	set_default_wip_warehouse: function (frm)
+	{
+		if (!(frm.doc.wip_warehouse || frm.doc.fg_warehouse)) {
+			frappe.call({
+				method: "cleceim_app_management.doctype.ordenes_de_trabajo.ordenes_de_trabajo.get_default_warehouse",
+				callback: function (r) {
+					if (!r.exe) {
+						if (!frm.doc.wip_warehouse)
+							frm.set_value("wip-warehouse", r.message.wip_warehouse);
+						if (!frm.doc.fg_warehosue)
+							frm.set_value("fg_warehouse", r.message.fg_warehouse);
+					}
+				}
+			});
+		}
+	},
 
 	set_custom_buttons: function (frm)
 	{
