@@ -2,7 +2,8 @@
 from __future__ import unicode_literals
 from . import __version__ as app_version
 
-app_name = "cleceim_app_management"
+#app_name = "cleceim_app_management"
+app_name = "erpcleceim"
 app_title = "CLECEIM App Management"
 app_publisher = "DonFuhrer"
 app_description = "An application to manage work orders, invoices and delivery notes."

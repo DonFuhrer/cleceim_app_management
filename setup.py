@@ -6,14 +6,16 @@ import re, ast
 # get version from __version__ variable in cleceim_app_management/__init__.py
 _version_re = re.compile(r'__version__\s+=\s+(.*)')
 
-with open('cleceim_app_management/__init__.py', 'rb') as f:
+with open('erpcleceim/__init__.py', 'rb') as f:
+#with open('cleceim_app_management/__init__.py', 'rb') as f:
     version = str(ast.literal_eval(_version_re.search(
         f.read().decode('utf-8')).group(1)))
 
 requirements = parse_requirements("requirements.txt", session="")
 
 setup(
-	name='cleceim_app_management',
+        name='erpcleceim',
+        #name='cleceim_app_management',
 	version=version,
 	description='An application to manage work orders, invoices and delivery notes.',
 	author='DonFuhrer',
